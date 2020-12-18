@@ -148,6 +148,13 @@ impl State {
         )
         .unwrap();
     }
+    fn draw_pieces(&mut self, ctx: &mut Context) {
+        for i in 0..BOARD_SIZE {
+            for j in 0..BOARD_SIZE {
+                self.draw_piece(ctx, [j as f32, i as f32]);
+            }
+        }
+    }
 }
 impl event::EventHandler for State {
     fn update(&mut self, _ctx: &mut Context) -> GameResult {
@@ -157,7 +164,7 @@ impl event::EventHandler for State {
     fn draw(&mut self, ctx: &mut Context) -> GameResult {
         graphics::clear(ctx, graphics::BLACK);
         self.draw_board(ctx);
-        self.draw_piece(ctx, [1., 0.]);
+        self.draw_pieces(ctx);
         graphics::present(ctx)?;
         Ok(())
     }
