@@ -195,6 +195,30 @@ impl State {
         let pos = input::mouse::position(ctx);
         [(pos.x / square_size[0]) as usize as f32, (pos.y / square_size[1]) as usize as f32]
     }
+    fn highlight_square(&mut self, ctx: &mut Context, pos: [f32; 2]) {
+        let square_size: [f32; 2] = [SIZE[0] / BOARD_SIZE as f32, SIZE[1] / BOARD_SIZE as f32];
+        let highlight = graphics::Mesh::new_rectangle(
+            ctx,
+            graphics::DrawMode::fill(),
+            graphics::Rect {
+                x: 0.,
+                y: 0.,
+                w: square_size[0],
+                h: square_size[1],
+            },
+            [1.0, 1.0, 0.0, 0.3].into(),
+        )
+        .unwrap();
+        graphics::draw(
+            ctx,
+            &highlight,
+            (na::Point2::new(
+                    pos[0] * square_size[0],
+                    pos[1] * square_size[1],
+            ),),
+        )
+        .unwrap();
+    }
 }
 impl event::EventHandler for State {
     fn update(&mut self, _ctx: &mut Context) -> GameResult {
@@ -205,6 +229,8 @@ impl event::EventHandler for State {
         graphics::clear(ctx, graphics::BLACK);
         self.draw_board(ctx);
         self.draw_pieces(ctx);
+        let current_square_pos = self.get_current_square(ctx);
+        self.highlight_square(ctx, current_square_pos);
         graphics::present(ctx)?;
         Ok(())
     }
