@@ -163,7 +163,6 @@ impl State {
             Piece::Black(Type::Queen) | Piece::White(Type::Queen) => text_fragment = graphics::TextFragment::new("Q"),
             Piece::Black(Type::King) | Piece::White(Type::King) => text_fragment = graphics::TextFragment::new("K"),
             _ => return,
-            // _ => unreachable!(),
         }
         graphics::draw(
             ctx,
