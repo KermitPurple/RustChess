@@ -1,8 +1,8 @@
-//! This is a chess program
-//! it uses the ggez graphics and game library to
-//! create a graphics user interface and get mouse input
+//! This is a chess program.
+//! it uses the ggez graphics and game library to.
+//! create a graphics user interface and get mouse input.
 //!
-//! This project is a collaboration between Patrick and Shane McDonough
+//! This project is a collaboration between Patrick and Shane McDonough.
 
 use ggez::event;
 use ggez::graphics;
@@ -10,13 +10,19 @@ use ggez::input;
 use ggez::nalgebra as na;
 use ggez::{Context, GameResult};
 
+/// The size of the main window in pixels.
+/// The first number is the x coordinate and the second is the y.
 const WINDOW_SIZE: [f32; 2] = [700., 700.];
+/// The number of tiles across the board.
 const BOARD_SIZE: usize = 8;
+/// The first number is the x coordinate and the second is the y.
+/// the size of a single tile in pixels.
 const SQUARE_SIZE: [f32; 2] = [
     WINDOW_SIZE[0] / BOARD_SIZE as f32,
     WINDOW_SIZE[1] / BOARD_SIZE as f32,
 ];
 
+/// The two different colors a chess piece can be.
 enum Color {
     Black,
     White,
@@ -44,16 +50,16 @@ enum Type {
     King,
 }
 
-/// This is the current game state
-/// board represents the pieces are and their location in the chess board.
-/// color represents which team currently has a turn
+/// This is the current game state.
 struct State {
+    /// board represents the pieces are and their location in the chess board.
     board: [[Piece; BOARD_SIZE]; BOARD_SIZE],
+    /// color represents which team currently has a turn.
     color: Color,
 }
 
 impl State {
-    /// creates a new State with all pieces in the correct starting position
+    /// creates a new State with all pieces in the correct starting position.
     fn new() -> Self {
         Self {
             board: [
@@ -88,7 +94,7 @@ impl State {
         }
     }
 
-    /// Draws the white tiles of the chess board against the black background
+    /// Draws the white tiles of the chess board against the black background.
     fn draw_board(&mut self, ctx: &mut Context) {
         let square = graphics::Mesh::new_rectangle(
             ctx,
@@ -127,7 +133,7 @@ impl State {
         }
     }
     
-    /// Draws the chess piece that occupies the given position
+    /// Draws the chess piece that occupies the given position.
     fn draw_piece(&mut self, ctx: &mut Context, pos: [f32; 2]) {
         let piece = self.board[pos[1] as usize][pos[0] as usize];
         let color: graphics::Color;
@@ -216,7 +222,7 @@ impl State {
         .unwrap();
     }
 
-    /// Draws every chess piece on the board
+    /// Draws every chess piece on the board.
     fn draw_pieces(&mut self, ctx: &mut Context) {
         for i in 0..BOARD_SIZE {
             for j in 0..BOARD_SIZE {
@@ -225,7 +231,7 @@ impl State {
         }
     }
     
-    /// gets the index of the current square that the mouse is hovering over
+    /// gets the index of the current square that the mouse is hovering over.
     fn get_current_square(&mut self, ctx: &mut Context) -> [f32; 2] {
         let pos = input::mouse::position(ctx);
         [
@@ -234,7 +240,7 @@ impl State {
         ]
     }
     
-    /// highlights the square at the given position
+    /// highlights the square at the given position.
     fn highlight_square(&mut self, ctx: &mut Context, pos: [f32; 2]) {
         let highlight = graphics::Mesh::new_rectangle(
             ctx,
@@ -261,12 +267,12 @@ impl State {
 }
 
 impl event::EventHandler for State {
-    /// The game logic function
+    /// The game logic function.
     fn update(&mut self, _ctx: &mut Context) -> GameResult {
         Ok(())
     }
 
-    /// the function that draw everything to the screen
+    /// the function that draws everything to the screen.
     fn draw(&mut self, ctx: &mut Context) -> GameResult {
         graphics::clear(ctx, graphics::BLACK);
         self.draw_board(ctx);
