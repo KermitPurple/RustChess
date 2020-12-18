@@ -31,7 +31,16 @@ struct State {
 impl State {
     fn new() -> Self {
         Self {
-            board: [[Piece::Empty; 8]; 8],
+            board: [
+                [Piece::White(Type::Rook), Piece::White(Type::Knight), Piece::White(Type::Bishop), Piece::White(Type::Queen), Piece::White(Type::King), Piece::White(Type::Bishop), Piece::White(Type::Knight), Piece::White(Type::Rook),],
+                [Piece::White(Type::Pawn); 8],
+                [Piece::Empty; 8],
+                [Piece::Empty; 8],
+                [Piece::Empty; 8],
+                [Piece::Empty; 8],
+                [Piece::Black(Type::Pawn); 8],
+                [Piece::Black(Type::Rook), Piece::Black(Type::Knight), Piece::Black(Type::Bishop), Piece::Black(Type::Queen), Piece::Black(Type::King), Piece::Black(Type::Bishop), Piece::Black(Type::Knight), Piece::Black(Type::Rook),],
+            ],
             color: Color::Black,
         }
     }
