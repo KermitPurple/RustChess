@@ -22,6 +22,9 @@ enum Color {
     White,
 }
 
+/// An enum that represents a spot on a chess board.
+/// Holds the team information and which type of piece it is.
+/// Alternatively, It could represent and empty space on the chessboard.
 #[derive(Copy, Clone)]
 enum Piece {
     Empty,
@@ -29,6 +32,8 @@ enum Piece {
     White(Type),
 }
 
+/// An enum that represents each type of chess piece there is.
+/// Does not identify team at all.
 #[derive(Copy, Clone)]
 enum Type {
     Pawn,
@@ -39,12 +44,16 @@ enum Type {
     King,
 }
 
+/// This is the current game state
+/// board represents the pieces are and their location in the chess board.
+/// color represents which team currently has a turn
 struct State {
     board: [[Piece; BOARD_SIZE]; BOARD_SIZE],
     color: Color,
 }
 
 impl State {
+    /// creates a new State with all pieces in the correct starting position
     fn new() -> Self {
         Self {
             board: [
@@ -79,6 +88,7 @@ impl State {
         }
     }
 
+    /// Draws the white tiles of the chess board against the black background
     fn draw_board(&mut self, ctx: &mut Context) {
         let square = graphics::Mesh::new_rectangle(
             ctx,
@@ -117,6 +127,7 @@ impl State {
         }
     }
     
+    /// Draws the chess piece that occupies the given position
     fn draw_piece(&mut self, ctx: &mut Context, pos: [f32; 2]) {
         let piece = self.board[pos[1] as usize][pos[0] as usize];
         let color: graphics::Color;
@@ -205,6 +216,7 @@ impl State {
         .unwrap();
     }
 
+    /// Draws every chess piece on the board
     fn draw_pieces(&mut self, ctx: &mut Context) {
         for i in 0..BOARD_SIZE {
             for j in 0..BOARD_SIZE {
@@ -213,6 +225,7 @@ impl State {
         }
     }
     
+    /// gets the index of the current square that the mouse is hovering over
     fn get_current_square(&mut self, ctx: &mut Context) -> [f32; 2] {
         let pos = input::mouse::position(ctx);
         [
@@ -221,6 +234,7 @@ impl State {
         ]
     }
     
+    /// highlights the square at the given position
     fn highlight_square(&mut self, ctx: &mut Context, pos: [f32; 2]) {
         let highlight = graphics::Mesh::new_rectangle(
             ctx,
@@ -247,10 +261,12 @@ impl State {
 }
 
 impl event::EventHandler for State {
+    /// The game logic function
     fn update(&mut self, _ctx: &mut Context) -> GameResult {
         Ok(())
     }
 
+    /// the function that draw everything to the screen
     fn draw(&mut self, ctx: &mut Context) -> GameResult {
         graphics::clear(ctx, graphics::BLACK);
         self.draw_board(ctx);
