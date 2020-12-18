@@ -4,9 +4,9 @@ use ggez::graphics;
 use ggez::nalgebra as na;
 use ggez::{Context, GameResult};
 
-const SIZE: [f32; 2] = [600., 600.];
+const WINDOW_SIZE: [f32; 2] = [700., 700.];
 const BOARD_SIZE: usize = 8;
-const SQUARE_SIZE: [f32; 2] = [SIZE[0] / BOARD_SIZE as f32, SIZE[1] / BOARD_SIZE as f32];
+const SQUARE_SIZE: [f32; 2] = [WINDOW_SIZE[0] / BOARD_SIZE as f32, WINDOW_SIZE[1] / BOARD_SIZE as f32];
 
 enum Color {
     Black,
@@ -242,8 +242,8 @@ fn main() -> GameResult {
             srgb: true,
         })
         .window_mode(ggez::conf::WindowMode {
-            width: SIZE[0],
-            height: SIZE[1],
+            width: WINDOW_SIZE[0],
+            height: WINDOW_SIZE[1],
             maximized: false,
             fullscreen_type: ggez::conf::FullscreenType::Windowed,
             borderless: false,
