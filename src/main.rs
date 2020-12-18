@@ -4,6 +4,7 @@ use ggez::nalgebra as na;
 use ggez::{Context, GameResult};
 
 const SIZE: [f32; 2] = [600., 600.];
+const BOARD_SIZE: usize = 8;
 
 enum Color {
     Black,
@@ -25,7 +26,7 @@ enum Type {
     King,
 }
 struct State {
-    board: [[Piece; 8]; 8],
+    board: [[Piece; BOARD_SIZE]; BOARD_SIZE],
     color: Color,
 }
 impl State {
@@ -33,19 +34,19 @@ impl State {
         Self {
             board: [
                 [Piece::White(Type::Rook), Piece::White(Type::Knight), Piece::White(Type::Bishop), Piece::White(Type::Queen), Piece::White(Type::King), Piece::White(Type::Bishop), Piece::White(Type::Knight), Piece::White(Type::Rook),],
-                [Piece::White(Type::Pawn); 8],
-                [Piece::Empty; 8],
-                [Piece::Empty; 8],
-                [Piece::Empty; 8],
-                [Piece::Empty; 8],
-                [Piece::Black(Type::Pawn); 8],
+                [Piece::White(Type::Pawn); BOARD_SIZE],
+                [Piece::Empty; BOARD_SIZE],
+                [Piece::Empty; BOARD_SIZE],
+                [Piece::Empty; BOARD_SIZE],
+                [Piece::Empty; BOARD_SIZE],
+                [Piece::Black(Type::Pawn); BOARD_SIZE],
                 [Piece::Black(Type::Rook), Piece::Black(Type::Knight), Piece::Black(Type::Bishop), Piece::Black(Type::Queen), Piece::Black(Type::King), Piece::Black(Type::Bishop), Piece::Black(Type::Knight), Piece::Black(Type::Rook),],
             ],
             color: Color::Black,
         }
     }
     fn draw_board(&mut self, ctx: &mut Context) {
-        let square_size: [f32; 2] = [SIZE[0] / 8., SIZE[1] / 8.];
+        let square_size: [f32; 2] = [SIZE[0] / BOARD_SIZE as f32, SIZE[1] / BOARD_SIZE as f32];
         let square = graphics::Mesh::new_rectangle(
             ctx,
             graphics::DrawMode::fill(),
