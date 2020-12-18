@@ -25,7 +25,7 @@ enum Type {
 }
 struct State {
     // board: [[Piece; 8]; 8],
-    // color: Color,
+// color: Color,
 }
 impl State {
     fn drawBoard(&mut self, ctx: &mut Context) {
@@ -33,19 +33,36 @@ impl State {
         let square = graphics::Mesh::new_rectangle(
             ctx,
             graphics::DrawMode::fill(),
-            graphics::Rect{
+            graphics::Rect {
                 x: 0.,
                 y: 0.,
                 w: square_size[0],
                 h: square_size[1],
             },
             graphics::WHITE,
-        ).unwrap();
+        )
+        .unwrap();
         graphics::draw(ctx, &square, (na::Point2::new(0., 0.),)).unwrap();
         for i in 0..4 {
             for j in 0..4 {
-                graphics::draw(ctx, &square, (na::Point2::new(j as f32 * square_size[0] * 2., i as f32 * square_size[1] * 2.),)).unwrap();
-                graphics::draw(ctx, &square, (na::Point2::new(j as f32 * square_size[0] * 2. + square_size[0], i as f32 * square_size[1] * 2. + square_size[1]),)).unwrap();
+                graphics::draw(
+                    ctx,
+                    &square,
+                    (na::Point2::new(
+                        j as f32 * square_size[0] * 2.,
+                        i as f32 * square_size[1] * 2.,
+                    ),),
+                )
+                .unwrap();
+                graphics::draw(
+                    ctx,
+                    &square,
+                    (na::Point2::new(
+                        j as f32 * square_size[0] * 2. + square_size[0],
+                        i as f32 * square_size[1] * 2. + square_size[1],
+                    ),),
+                )
+                .unwrap();
             }
         }
     }
@@ -84,6 +101,6 @@ fn main() -> GameResult {
             resizable: false,
         })
         .build()?;
-    let state = &mut State { };
+    let state = &mut State {};
     event::run(&mut ctx, &mut event_loop, state)
 }
