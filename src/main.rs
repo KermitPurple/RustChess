@@ -1,3 +1,9 @@
+//! This is a chess program
+//! it uses the ggez graphics and game library to
+//! create a graphics user interface and get mouse input
+//!
+//! This project is a collaboration between Patrick and Shane McDonough
+
 use ggez::event;
 use ggez::graphics;
 use ggez::input;
