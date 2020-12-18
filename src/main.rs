@@ -284,8 +284,9 @@ impl event::EventHandler for State {
     }
 }
 
+/// Driver function
 fn main() -> GameResult {
-    let (mut ctx, mut event_loop) = ggez::ContextBuilder::new("super_simple", "ggez")
+    let (mut ctx, mut event_loop) = ggez::ContextBuilder::new("Chess", "Patrick and Shane McDonough")
         .window_setup(ggez::conf::WindowSetup {
             title: "Chess".to_owned(),
             samples: ggez::conf::NumSamples::Zero,
