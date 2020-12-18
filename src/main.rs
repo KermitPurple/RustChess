@@ -6,6 +6,7 @@ use ggez::{Context, GameResult};
 
 const SIZE: [f32; 2] = [600., 600.];
 const BOARD_SIZE: usize = 8;
+const SQUARE_SIZE: [f32; 2] = [SIZE[0] / BOARD_SIZE as f32, SIZE[1] / BOARD_SIZE as f32];
 
 enum Color {
     Black,
@@ -65,15 +66,14 @@ impl State {
         }
     }
     fn draw_board(&mut self, ctx: &mut Context) {
-        let square_size: [f32; 2] = [SIZE[0] / BOARD_SIZE as f32, SIZE[1] / BOARD_SIZE as f32];
         let square = graphics::Mesh::new_rectangle(
             ctx,
             graphics::DrawMode::fill(),
             graphics::Rect {
                 x: 0.,
                 y: 0.,
-                w: square_size[0],
-                h: square_size[1],
+                w: SQUARE_SIZE[0],
+                h: SQUARE_SIZE[1],
             },
             graphics::WHITE,
         )
@@ -85,8 +85,8 @@ impl State {
                     ctx,
                     &square,
                     (na::Point2::new(
-                        j as f32 * square_size[0] * 2.,
-                        i as f32 * square_size[1] * 2.,
+                        j as f32 * SQUARE_SIZE[0] * 2.,
+                        i as f32 * SQUARE_SIZE[1] * 2.,
                     ),),
                 )
                 .unwrap();
@@ -94,8 +94,8 @@ impl State {
                     ctx,
                     &square,
                     (na::Point2::new(
-                        j as f32 * square_size[0] * 2. + square_size[0],
-                        i as f32 * square_size[1] * 2. + square_size[1],
+                        j as f32 * SQUARE_SIZE[0] * 2. + SQUARE_SIZE[0],
+                        i as f32 * SQUARE_SIZE[1] * 2. + SQUARE_SIZE[1],
                     ),),
                 )
                 .unwrap();
@@ -104,7 +104,6 @@ impl State {
     }
     fn draw_piece(&mut self, ctx: &mut Context, pos: [f32; 2]) {
         let piece = self.board[pos[1] as usize][pos[0] as usize];
-        let square_size: [f32; 2] = [SIZE[0] / BOARD_SIZE as f32, SIZE[1] / BOARD_SIZE as f32];
         let color: graphics::Color;
         let text_color: graphics::Color;
         match piece {
@@ -122,8 +121,8 @@ impl State {
         let circle = graphics::Mesh::new_circle(
             ctx,
             graphics::DrawMode::fill(),
-            [square_size[0] / 2., square_size[1] / 2.],
-            square_size[0] * 0.4,
+            [SQUARE_SIZE[0] / 2., SQUARE_SIZE[1] / 2.],
+            SQUARE_SIZE[0] * 0.4,
             0.1,
             color,
         )
@@ -131,8 +130,8 @@ impl State {
         let border = graphics::Mesh::new_circle(
             ctx,
             graphics::DrawMode::stroke(2.),
-            [square_size[0] / 2., square_size[1] / 2.],
-            square_size[0] * 0.4,
+            [SQUARE_SIZE[0] / 2., SQUARE_SIZE[1] / 2.],
+            SQUARE_SIZE[0] * 0.4,
             0.1,
             [0.5, 0.5, 0.5, 1.0].into(),
         )
@@ -141,8 +140,8 @@ impl State {
             ctx,
             &circle,
             (na::Point2::new(
-                pos[0] * square_size[0],
-                pos[1] * square_size[1],
+                pos[0] * SQUARE_SIZE[0],
+                pos[1] * SQUARE_SIZE[1],
             ),),
         )
         .unwrap();
@@ -150,8 +149,8 @@ impl State {
             ctx,
             &border,
             (na::Point2::new(
-                pos[0] * square_size[0],
-                pos[1] * square_size[1],
+                pos[0] * SQUARE_SIZE[0],
+                pos[1] * SQUARE_SIZE[1],
             ),),
         )
         .unwrap();
@@ -175,10 +174,10 @@ impl State {
                     y: 40.,
                 })
             )
-            .set_bounds(square_size, graphics::Align::Center),
+            .set_bounds(SQUARE_SIZE, graphics::Align::Center),
             (na::Point2::new(
-                pos[0] * square_size[0],
-                pos[1] * square_size[1] + square_size[1] / 4.,
+                pos[0] * SQUARE_SIZE[0],
+                pos[1] * SQUARE_SIZE[1] + SQUARE_SIZE[1] / 4.,
             ),),
         )
         .unwrap();
@@ -191,20 +190,18 @@ impl State {
         }
     }
     fn get_current_square(&mut self, ctx: &mut Context) -> [f32; 2] {
-        let square_size: [f32; 2] = [SIZE[0] / BOARD_SIZE as f32, SIZE[1] / BOARD_SIZE as f32];
         let pos = input::mouse::position(ctx);
-        [(pos.x / square_size[0]) as usize as f32, (pos.y / square_size[1]) as usize as f32]
+        [(pos.x / SQUARE_SIZE[0]) as usize as f32, (pos.y / SQUARE_SIZE[1]) as usize as f32]
     }
     fn highlight_square(&mut self, ctx: &mut Context, pos: [f32; 2]) {
-        let square_size: [f32; 2] = [SIZE[0] / BOARD_SIZE as f32, SIZE[1] / BOARD_SIZE as f32];
         let highlight = graphics::Mesh::new_rectangle(
             ctx,
             graphics::DrawMode::fill(),
             graphics::Rect {
                 x: 0.,
                 y: 0.,
-                w: square_size[0],
-                h: square_size[1],
+                w: SQUARE_SIZE[0],
+                h: SQUARE_SIZE[1],
             },
             [1.0, 1.0, 0.0, 0.3].into(),
         )
@@ -213,8 +210,8 @@ impl State {
             ctx,
             &highlight,
             (na::Point2::new(
-                    pos[0] * square_size[0],
-                    pos[1] * square_size[1],
+                    pos[0] * SQUARE_SIZE[0],
+                    pos[1] * SQUARE_SIZE[1],
             ),),
         )
         .unwrap();
