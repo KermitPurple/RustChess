@@ -27,7 +27,7 @@ struct State {
 // color: Color,
 }
 impl State {
-    fn drawBoard(&mut self, ctx: &mut Context) {
+    fn draw_board(&mut self, ctx: &mut Context) {
         let square_size: [f32; 2] = [SIZE[0] / 8., SIZE[1] / 8.];
         let square = graphics::Mesh::new_rectangle(
             ctx,
@@ -73,7 +73,7 @@ impl event::EventHandler for State {
 
     fn draw(&mut self, ctx: &mut Context) -> GameResult {
         graphics::clear(ctx, graphics::BLACK);
-        self.drawBoard(ctx);
+        self.draw_board(ctx);
         graphics::present(ctx)?;
         Ok(())
     }
