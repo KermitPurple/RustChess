@@ -107,8 +107,8 @@ impl State {
         let color: graphics::Color;
         match piece {
             Piece::Empty => return,
-            Piece::Black(_) => color = graphics::BLACK,
-            Piece::White(_) => color = graphics::WHITE,
+            Piece::Black(_) => color = [0.2, 0.2, 0.2, 1.0].into(),
+            Piece::White(_) => color = [0.8, 0.8, 0.8, 1.0].into(),
             _ => unreachable!(),
         };
         let circle = graphics::Mesh::new_circle(
