@@ -33,14 +33,32 @@ impl State {
     fn new() -> Self {
         Self {
             board: [
-                [Piece::White(Type::Rook), Piece::White(Type::Knight), Piece::White(Type::Bishop), Piece::White(Type::Queen), Piece::White(Type::King), Piece::White(Type::Bishop), Piece::White(Type::Knight), Piece::White(Type::Rook),],
+                [
+                    Piece::White(Type::Rook),
+                    Piece::White(Type::Knight),
+                    Piece::White(Type::Bishop),
+                    Piece::White(Type::Queen),
+                    Piece::White(Type::King),
+                    Piece::White(Type::Bishop),
+                    Piece::White(Type::Knight),
+                    Piece::White(Type::Rook),
+                ],
                 [Piece::White(Type::Pawn); BOARD_SIZE],
                 [Piece::Empty; BOARD_SIZE],
                 [Piece::Empty; BOARD_SIZE],
                 [Piece::Empty; BOARD_SIZE],
                 [Piece::Empty; BOARD_SIZE],
                 [Piece::Black(Type::Pawn); BOARD_SIZE],
-                [Piece::Black(Type::Rook), Piece::Black(Type::Knight), Piece::Black(Type::Bishop), Piece::Black(Type::Queen), Piece::Black(Type::King), Piece::Black(Type::Bishop), Piece::Black(Type::Knight), Piece::Black(Type::Rook),],
+                [
+                    Piece::Black(Type::Rook),
+                    Piece::Black(Type::Knight),
+                    Piece::Black(Type::Bishop),
+                    Piece::Black(Type::Queen),
+                    Piece::Black(Type::King),
+                    Piece::Black(Type::Bishop),
+                    Piece::Black(Type::Knight),
+                    Piece::Black(Type::Rook),
+                ],
             ],
             color: Color::Black,
         }
