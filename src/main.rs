@@ -9,11 +9,13 @@ enum Color {
     Black,
     White,
 }
+#[derive(Copy, Clone)]
 enum Piece {
     Empty,
     Black(Type),
     White(Type),
 }
+#[derive(Copy, Clone)]
 enum Type {
     Pawn,
     Rook,
@@ -23,10 +25,16 @@ enum Type {
     King,
 }
 struct State {
-    // board: [[Piece; 8]; 8],
-// color: Color,
+    board: [[Piece; 8]; 8],
+    color: Color,
 }
 impl State {
+    fn new() -> Self {
+        Self {
+            board: [[Piece::Empty; 8]; 8],
+            color: Color::Black,
+        }
+    }
     fn draw_board(&mut self, ctx: &mut Context) {
         let square_size: [f32; 2] = [SIZE[0] / 8., SIZE[1] / 8.];
         let square = graphics::Mesh::new_rectangle(
@@ -100,6 +108,6 @@ fn main() -> GameResult {
             resizable: false,
         })
         .build()?;
-    let state = &mut State {};
+    let state = &mut State::new();
     event::run(&mut ctx, &mut event_loop, state)
 }
