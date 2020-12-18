@@ -1,3 +1,4 @@
+use ggez::input;
 use ggez::event;
 use ggez::graphics;
 use ggez::nalgebra as na;
@@ -188,6 +189,11 @@ impl State {
                 self.draw_piece(ctx, [j as f32, i as f32]);
             }
         }
+    }
+    fn get_current_square(&mut self, ctx: &mut Context) -> [f32; 2] {
+        let square_size: [f32; 2] = [SIZE[0] / BOARD_SIZE as f32, SIZE[1] / BOARD_SIZE as f32];
+        let pos = input::mouse::position(ctx);
+        [(pos.x / square_size[0]) as usize as f32, (pos.y / square_size[1]) as usize as f32]
     }
 }
 impl event::EventHandler for State {
