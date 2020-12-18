@@ -96,6 +96,7 @@ impl State {
 
     /// Draws the white tiles of the chess board against the black background.
     fn draw_board(&mut self, ctx: &mut Context) {
+        graphics::clear(ctx, graphics::BLACK);
         let square = graphics::Mesh::new_rectangle(
             ctx,
             graphics::DrawMode::fill(),
@@ -274,7 +275,6 @@ impl event::EventHandler for State {
 
     /// the function that draws everything to the screen.
     fn draw(&mut self, ctx: &mut Context) -> GameResult {
-        graphics::clear(ctx, graphics::BLACK);
         self.draw_board(ctx);
         self.draw_pieces(ctx);
         let current_square_pos = self.get_current_square(ctx);
