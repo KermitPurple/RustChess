@@ -116,13 +116,31 @@ impl State {
             graphics::DrawMode::fill(),
             [square_size[0] / 2., square_size[1] / 2.],
             square_size[0] * 0.4,
-            10.,
+            0.1,
             color,
+        )
+        .unwrap();
+        let border = graphics::Mesh::new_circle(
+            ctx,
+            graphics::DrawMode::stroke(2.),
+            [square_size[0] / 2., square_size[1] / 2.],
+            square_size[0] * 0.4,
+            0.1,
+            [0.5, 0.5, 0.5, 1.0].into(),
         )
         .unwrap();
         graphics::draw(
             ctx,
             &circle,
+            (na::Point2::new(
+                pos[0] * square_size[0],
+                pos[1] * square_size[1],
+            ),),
+        )
+        .unwrap();
+        graphics::draw(
+            ctx,
+            &border,
             (na::Point2::new(
                 pos[0] * square_size[0],
                 pos[1] * square_size[1],
