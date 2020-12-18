@@ -21,12 +21,14 @@ enum Color {
     Black,
     White,
 }
+
 #[derive(Copy, Clone)]
 enum Piece {
     Empty,
     Black(Type),
     White(Type),
 }
+
 #[derive(Copy, Clone)]
 enum Type {
     Pawn,
@@ -36,10 +38,12 @@ enum Type {
     Queen,
     King,
 }
+
 struct State {
     board: [[Piece; BOARD_SIZE]; BOARD_SIZE],
     color: Color,
 }
+
 impl State {
     fn new() -> Self {
         Self {
@@ -74,6 +78,7 @@ impl State {
             color: Color::Black,
         }
     }
+
     fn draw_board(&mut self, ctx: &mut Context) {
         let square = graphics::Mesh::new_rectangle(
             ctx,
@@ -111,6 +116,7 @@ impl State {
             }
         }
     }
+    
     fn draw_piece(&mut self, ctx: &mut Context, pos: [f32; 2]) {
         let piece = self.board[pos[1] as usize][pos[0] as usize];
         let color: graphics::Color;
@@ -198,6 +204,7 @@ impl State {
         )
         .unwrap();
     }
+
     fn draw_pieces(&mut self, ctx: &mut Context) {
         for i in 0..BOARD_SIZE {
             for j in 0..BOARD_SIZE {
@@ -205,6 +212,7 @@ impl State {
             }
         }
     }
+    
     fn get_current_square(&mut self, ctx: &mut Context) -> [f32; 2] {
         let pos = input::mouse::position(ctx);
         [
@@ -212,6 +220,7 @@ impl State {
             (pos.y / SQUARE_SIZE[1]) as usize as f32,
         ]
     }
+    
     fn highlight_square(&mut self, ctx: &mut Context, pos: [f32; 2]) {
         let highlight = graphics::Mesh::new_rectangle(
             ctx,
@@ -236,6 +245,7 @@ impl State {
         .unwrap();
     }
 }
+
 impl event::EventHandler for State {
     fn update(&mut self, _ctx: &mut Context) -> GameResult {
         Ok(())
@@ -251,6 +261,7 @@ impl event::EventHandler for State {
         Ok(())
     }
 }
+
 fn main() -> GameResult {
     let (mut ctx, mut event_loop) = ggez::ContextBuilder::new("super_simple", "ggez")
         .window_setup(ggez::conf::WindowSetup {
