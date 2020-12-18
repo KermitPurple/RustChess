@@ -1,12 +1,15 @@
-use ggez::input;
 use ggez::event;
 use ggez::graphics;
+use ggez::input;
 use ggez::nalgebra as na;
 use ggez::{Context, GameResult};
 
 const WINDOW_SIZE: [f32; 2] = [700., 700.];
 const BOARD_SIZE: usize = 8;
-const SQUARE_SIZE: [f32; 2] = [WINDOW_SIZE[0] / BOARD_SIZE as f32, WINDOW_SIZE[1] / BOARD_SIZE as f32];
+const SQUARE_SIZE: [f32; 2] = [
+    WINDOW_SIZE[0] / BOARD_SIZE as f32,
+    WINDOW_SIZE[1] / BOARD_SIZE as f32,
+];
 
 enum Color {
     Black,
@@ -157,22 +160,29 @@ impl State {
         let text_fragment: graphics::TextFragment;
         match piece {
             Piece::Black(Type::Pawn) | Piece::White(Type::Pawn) => return,
-            Piece::Black(Type::Rook) | Piece::White(Type::Rook) => text_fragment = graphics::TextFragment::new("R"),
-            Piece::Black(Type::Knight) | Piece::White(Type::Knight) => text_fragment = graphics::TextFragment::new("N"),
-            Piece::Black(Type::Bishop) | Piece::White(Type::Bishop) => text_fragment = graphics::TextFragment::new("B"),
-            Piece::Black(Type::Queen) | Piece::White(Type::Queen) => text_fragment = graphics::TextFragment::new("Q"),
-            Piece::Black(Type::King) | Piece::White(Type::King) => text_fragment = graphics::TextFragment::new("K"),
+            Piece::Black(Type::Rook) | Piece::White(Type::Rook) => {
+                text_fragment = graphics::TextFragment::new("R")
+            }
+            Piece::Black(Type::Knight) | Piece::White(Type::Knight) => {
+                text_fragment = graphics::TextFragment::new("N")
+            }
+            Piece::Black(Type::Bishop) | Piece::White(Type::Bishop) => {
+                text_fragment = graphics::TextFragment::new("B")
+            }
+            Piece::Black(Type::Queen) | Piece::White(Type::Queen) => {
+                text_fragment = graphics::TextFragment::new("Q")
+            }
+            Piece::Black(Type::King) | Piece::White(Type::King) => {
+                text_fragment = graphics::TextFragment::new("K")
+            }
             _ => return,
         }
         graphics::draw(
             ctx,
             graphics::Text::new(
                 text_fragment
-                .color(text_color)
-                .scale(graphics::Scale {
-                    x: 40.,
-                    y: 40.,
-                })
+                    .color(text_color)
+                    .scale(graphics::Scale { x: 40., y: 40. }),
             )
             .set_bounds(SQUARE_SIZE, graphics::Align::Center),
             (na::Point2::new(
@@ -191,7 +201,10 @@ impl State {
     }
     fn get_current_square(&mut self, ctx: &mut Context) -> [f32; 2] {
         let pos = input::mouse::position(ctx);
-        [(pos.x / SQUARE_SIZE[0]) as usize as f32, (pos.y / SQUARE_SIZE[1]) as usize as f32]
+        [
+            (pos.x / SQUARE_SIZE[0]) as usize as f32,
+            (pos.y / SQUARE_SIZE[1]) as usize as f32,
+        ]
     }
     fn highlight_square(&mut self, ctx: &mut Context, pos: [f32; 2]) {
         let highlight = graphics::Mesh::new_rectangle(
@@ -210,8 +223,8 @@ impl State {
             ctx,
             &highlight,
             (na::Point2::new(
-                    pos[0] * SQUARE_SIZE[0],
-                    pos[1] * SQUARE_SIZE[1],
+                pos[0] * SQUARE_SIZE[0],
+                pos[1] * SQUARE_SIZE[1],
             ),),
         )
         .unwrap();
