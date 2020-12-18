@@ -105,10 +105,17 @@ impl State {
         let piece = self.board[pos[1] as usize][pos[0] as usize];
         let square_size: [f32; 2] = [SIZE[0] / BOARD_SIZE as f32, SIZE[1] / BOARD_SIZE as f32];
         let color: graphics::Color;
+        let text_color: graphics::Color;
         match piece {
             Piece::Empty => return,
-            Piece::Black(_) => color = [0.2, 0.2, 0.2, 1.0].into(),
-            Piece::White(_) => color = [0.8, 0.8, 0.8, 1.0].into(),
+            Piece::Black(_) => {
+                color = [0.2, 0.2, 0.2, 1.0].into();
+                text_color = [0.8, 0.8, 0.8, 1.0].into()
+            }
+            Piece::White(_) => {
+                color = [0.8, 0.8, 0.8, 1.0].into();
+                text_color = [0.2, 0.2, 0.2, 1.0].into()
+            }
             _ => unreachable!(),
         };
         let circle = graphics::Mesh::new_circle(
@@ -144,6 +151,34 @@ impl State {
             (na::Point2::new(
                 pos[0] * square_size[0],
                 pos[1] * square_size[1],
+            ),),
+        )
+        .unwrap();
+        let text_fragment: graphics::TextFragment;
+        match piece {
+            Piece::Black(Type::Pawn) | Piece::White(Type::Pawn) => return,
+            Piece::Black(Type::Rook) | Piece::White(Type::Rook) => text_fragment = graphics::TextFragment::new("R"),
+            Piece::Black(Type::Knight) | Piece::White(Type::Knight) => text_fragment = graphics::TextFragment::new("N"),
+            Piece::Black(Type::Bishop) | Piece::White(Type::Bishop) => text_fragment = graphics::TextFragment::new("B"),
+            Piece::Black(Type::Queen) | Piece::White(Type::Queen) => text_fragment = graphics::TextFragment::new("Q"),
+            Piece::Black(Type::King) | Piece::White(Type::King) => text_fragment = graphics::TextFragment::new("K"),
+            _ => return,
+            // _ => unreachable!(),
+        }
+        graphics::draw(
+            ctx,
+            graphics::Text::new(
+                text_fragment
+                .color(text_color)
+                .scale(graphics::Scale {
+                    x: 40.,
+                    y: 40.,
+                })
+            )
+            .set_bounds(square_size, graphics::Align::Center),
+            (na::Point2::new(
+                pos[0] * square_size[0],
+                pos[1] * square_size[1] + square_size[1] / 4.,
             ),),
         )
         .unwrap();
