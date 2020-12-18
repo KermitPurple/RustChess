@@ -101,6 +101,35 @@ impl State {
             }
         }
     }
+    fn draw_piece(&mut self, ctx: &mut Context, pos: [f32; 2]) {
+        let piece = self.board[pos[1] as usize][pos[0] as usize];
+        let square_size: [f32; 2] = [SIZE[0] / BOARD_SIZE as f32, SIZE[1] / BOARD_SIZE as f32];
+        let color: graphics::Color;
+        match piece {
+            Piece::Empty => return,
+            Piece::Black(_) => color = graphics::BLACK,
+            Piece::White(_) => color = graphics::WHITE,
+            _ => unreachable!(),
+        };
+        let circle = graphics::Mesh::new_circle(
+            ctx,
+            graphics::DrawMode::fill(),
+            [square_size[0] / 2., square_size[1] / 2.],
+            square_size[0] * 0.4,
+            10.,
+            color,
+        )
+        .unwrap();
+        graphics::draw(
+            ctx,
+            &circle,
+            (na::Point2::new(
+                pos[0] * square_size[0],
+                pos[1] * square_size[1],
+            ),),
+        )
+        .unwrap();
+    }
 }
 impl event::EventHandler for State {
     fn update(&mut self, _ctx: &mut Context) -> GameResult {
@@ -110,6 +139,7 @@ impl event::EventHandler for State {
     fn draw(&mut self, ctx: &mut Context) -> GameResult {
         graphics::clear(ctx, graphics::BLACK);
         self.draw_board(ctx);
+        self.draw_piece(ctx, [1., 0.]);
         graphics::present(ctx)?;
         Ok(())
     }
