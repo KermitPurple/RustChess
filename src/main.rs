@@ -2,6 +2,9 @@
 //! it uses the ggez graphics and game library to.
 //! create a graphics user interface and get mouse input.
 //!
+//! IMPORTANT: alsa-sys v0.1.2, a package used by ggez causes a panic in some linux distros.
+//! This can be solved by typing ```sudo apt install libsdl2-dev``` into the command line.
+//!
 //! This project is a collaboration between Patrick and Shane McDonough.
 
 use ggez::event;
