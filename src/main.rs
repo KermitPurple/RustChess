@@ -26,6 +26,7 @@ const SQUARE_SIZE: [f32; 2] = [
 ];
 
 /// The two different colors a chess piece can be.
+#[derive(PartialEq)]
 enum Color {
     Black,
     White,
@@ -59,6 +60,8 @@ struct State {
     board: [[Piece; BOARD_SIZE]; BOARD_SIZE],
     /// color represents which team currently has a turn.
     color: Color,
+    /// the position of the currently selected peice
+    selected_pos: Option<[f32; 2]>,
 }
 
 impl State {
@@ -79,7 +82,8 @@ impl State {
                 [Piece::White(Type::Pawn); BOARD_SIZE],
                 [Piece::Empty; BOARD_SIZE],
                 [Piece::Empty; BOARD_SIZE],
-                [Piece::Empty; BOARD_SIZE],
+                // [Piece::Empty; BOARD_SIZE],
+                [Piece::Empty, Piece::Black(Type::Knight), Piece::White(Type::Pawn), Piece::Empty, Piece::Empty, Piece::Empty, Piece::Empty, Piece::Empty,],
                 [Piece::Empty; BOARD_SIZE],
                 [Piece::Black(Type::Pawn); BOARD_SIZE],
                 [
@@ -94,6 +98,7 @@ impl State {
                 ],
             ],
             color: Color::Black,
+            selected_pos: None,
         }
     }
 
@@ -245,7 +250,7 @@ impl State {
     }
     
     /// highlights the square at the given position.
-    fn highlight_square(&mut self, ctx: &mut Context, pos: [f32; 2]) {
+    fn highlight_square(&mut self, ctx: &mut Context, pos: [f32; 2], color: graphics::Color) {
         let highlight = graphics::Mesh::new_rectangle(
             ctx,
             graphics::DrawMode::fill(),
@@ -255,7 +260,7 @@ impl State {
                 w: SQUARE_SIZE[0],
                 h: SQUARE_SIZE[1],
             },
-            [1.0, 1.0, 0.0, 0.3].into(),
+            color,
         )
         .unwrap();
         graphics::draw(
@@ -268,6 +273,69 @@ impl State {
         )
         .unwrap();
     }
+
+    /// lists the coordinates of valid moves
+    fn get_valid_moves(&mut self, ctx: &mut Context, pos: [f32; 2]) -> Vec<[f32; 2]>{
+        let mut v: Vec<[f32; 2]> = vec![];
+        match self.board[pos[1] as usize][pos[0] as usize] {
+            Piece::Black(Type::Pawn) => {
+                self.push_move(ctx, [pos[0], pos[1] - 1.], false, &mut v);
+                if pos[1] == 6. { // starting line
+                    self.push_move(ctx, [pos[0], pos[1] - 2.], false, &mut v);
+                }
+            }
+            Piece::White(Type::Pawn) => {
+                self.push_move(ctx, [pos[0], pos[1] + 1.], false, &mut v);
+                if pos[1] == 1. { // starting line
+                    self.push_move(ctx, [pos[0], pos[1] + 2.], false, &mut v);
+                }
+            }
+            Piece::Black(Type::Knight) | Piece::White(Type::Knight) => {
+                self.push_move(ctx, [pos[0] + 2., pos[1] + 1.], true, &mut v);
+                self.push_move(ctx, [pos[0] - 2., pos[1] + 1.], true, &mut v);
+                self.push_move(ctx, [pos[0] + 2., pos[1] - 1.], true, &mut v);
+                self.push_move(ctx, [pos[0] - 2., pos[1] - 1.], true, &mut v);
+                self.push_move(ctx, [pos[0] + 1., pos[1] + 2.], true, &mut v);
+                self.push_move(ctx, [pos[0] - 1., pos[1] + 2.], true, &mut v);
+                self.push_move(ctx, [pos[0] + 1., pos[1] - 2.], true, &mut v);
+                self.push_move(ctx, [pos[0] - 1., pos[1] - 2.], true, &mut v);
+            }
+            _ => (),
+        };
+        v
+    }
+
+    /// checks if a space is available to be inhabited
+    fn can_move_to(&mut self, ctx: &mut Context, pos: [f32; 2], can_kill: bool) -> bool {
+        if pos[0] < 0. || pos[0] >= BOARD_SIZE as f32 || pos[1] < 0. || pos[1] >= BOARD_SIZE as f32 {
+            return false;
+        }
+        let piece =  self.board[pos[1] as usize][pos[0] as usize];
+        match piece {
+            Piece::Empty => true,
+            Piece::Black(_) => {
+                if self.color == Color::Black{
+                    false
+                } else {
+                    can_kill
+                }
+            }
+            Piece::White(_) => {
+                if self.color == Color::White{
+                    false
+                } else {
+                    can_kill
+                }
+            }
+        }
+    }
+
+    /// Checks if a new point can be moved to then pushed to a vector
+    fn push_move(&mut self, ctx: &mut Context, new_pos: [f32; 2], can_kill: bool, v: &mut Vec<[f32; 2]>){
+        if self.can_move_to(ctx, new_pos, can_kill){
+            v.push(new_pos);
+        }
+    }
 }
 
 impl event::EventHandler for State {
@@ -276,12 +344,25 @@ impl event::EventHandler for State {
         Ok(())
     }
 
+    fn mouse_button_down_event(&mut self, ctx: &mut Context, button: input::mouse::MouseButton, _x: f32, _y: f32){
+        if button == input::mouse::MouseButton::Left {
+            self.selected_pos = Some(self.get_current_square(ctx));
+        }
+    }
+
     /// the function that draws everything to the screen.
     fn draw(&mut self, ctx: &mut Context) -> GameResult {
         self.draw_board(ctx);
         self.draw_pieces(ctx);
         let current_square_pos = self.get_current_square(ctx);
-        self.highlight_square(ctx, current_square_pos);
+        self.highlight_square(ctx, current_square_pos, [1., 1., 0., 0.3].into());
+        if self.selected_pos != None {
+            self.highlight_square(ctx, self.selected_pos.unwrap(), [1., 0., 0., 0.3].into());
+            let moves = self.get_valid_moves(ctx, self.selected_pos.unwrap());
+            for m in moves {
+                self.highlight_square(ctx, m, [0., 1., 0., 0.3].into());
+            }
+        }
         graphics::present(ctx)?;
         Ok(())
     }
