@@ -81,8 +81,9 @@ impl State {
                 ],
                 [Piece::White(Type::Pawn); BOARD_SIZE],
                 [Piece::Empty; BOARD_SIZE],
-                [Piece::Empty; BOARD_SIZE],
                 // [Piece::Empty; BOARD_SIZE],
+                // [Piece::Empty; BOARD_SIZE],
+                [Piece::Empty, Piece::Black(Type::Knight), Piece::White(Type::Pawn), Piece::Empty, Piece::Empty, Piece::Empty, Piece::Empty, Piece::Empty,],
                 [Piece::Empty, Piece::Black(Type::Knight), Piece::White(Type::Pawn), Piece::Empty, Piece::Empty, Piece::Empty, Piece::Empty, Piece::Empty,],
                 [Piece::Empty; BOARD_SIZE],
                 [Piece::Black(Type::Pawn); BOARD_SIZE],
@@ -277,7 +278,17 @@ impl State {
     /// lists the coordinates of valid moves
     fn get_valid_moves(&mut self, ctx: &mut Context, pos: [f32; 2]) -> Vec<[f32; 2]>{
         let mut v: Vec<[f32; 2]> = vec![];
-        match self.board[pos[1] as usize][pos[0] as usize] {
+        let piece = self.board[pos[1] as usize][pos[0] as usize];
+        match piece {
+            Piece::Black(_) => if self.color == Color::White {
+                return v;
+                }
+            Piece::White(_) => if self.color == Color::Black {
+                return v;
+                }
+            _ => (),
+        };
+        match piece {
             Piece::Black(Type::Pawn) => {
                 self.push_move(ctx, [pos[0], pos[1] - 1.], false, &mut v);
                 if pos[1] == 6. { // starting line
@@ -299,6 +310,24 @@ impl State {
                 self.push_move(ctx, [pos[0] - 1., pos[1] + 2.], true, &mut v);
                 self.push_move(ctx, [pos[0] + 1., pos[1] - 2.], true, &mut v);
                 self.push_move(ctx, [pos[0] - 1., pos[1] - 2.], true, &mut v);
+            }
+            Piece::Black(Type::Rook) | Piece::White(Type::Rook) => {
+                let mut offset = 1.;
+                while self.push_move(ctx, [pos[0] + offset, pos[1]], true, &mut v){
+                    offset += 1.;
+                }
+                offset = -1.;
+                while self.push_move(ctx, [pos[0] + offset, pos[1]], true, &mut v){
+                    offset -= 1.;
+                }
+                offset = 1.;
+                while self.push_move(ctx, [pos[0], pos[1] + offset], true, &mut v){
+                    offset += 1.;
+                }
+                offset = -1.;
+                while self.push_move(ctx, [pos[0], pos[1] + offset], true, &mut v){
+                    offset -= 1.;
+                }
             }
             _ => (),
         };
