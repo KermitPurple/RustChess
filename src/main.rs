@@ -80,7 +80,7 @@ impl State {
                 [Piece::Empty; BOARD_SIZE],
                 [Piece::Empty; BOARD_SIZE],
                 // [Piece::Empty; BOARD_SIZE],
-                [Piece::Empty, Piece::Black(Type::Pawn), Piece::White(Type::Pawn), Piece::Empty, Piece::Empty, Piece::Empty, Piece::Empty, Piece::Empty,],
+                [Piece::Empty, Piece::Black(Type::Knight), Piece::White(Type::Pawn), Piece::Empty, Piece::Empty, Piece::Empty, Piece::Empty, Piece::Empty,],
                 [Piece::Empty; BOARD_SIZE],
                 [Piece::Black(Type::Pawn); BOARD_SIZE],
                 [
@@ -286,6 +286,16 @@ impl State {
                 if pos[1] == 1. { // starting line
                     self.push_move(ctx, [pos[0], pos[1] + 2.], false, &mut v);
                 }
+            }
+            Piece::Black(Type::Knight) | Piece::White(Type::Knight) => {
+                self.push_move(ctx, [pos[0] + 2., pos[1] + 1.], true, &mut v);
+                self.push_move(ctx, [pos[0] - 2., pos[1] + 1.], true, &mut v);
+                self.push_move(ctx, [pos[0] + 2., pos[1] - 1.], true, &mut v);
+                self.push_move(ctx, [pos[0] - 2., pos[1] - 1.], true, &mut v);
+                self.push_move(ctx, [pos[0] + 1., pos[1] + 2.], true, &mut v);
+                self.push_move(ctx, [pos[0] - 1., pos[1] + 2.], true, &mut v);
+                self.push_move(ctx, [pos[0] + 1., pos[1] - 2.], true, &mut v);
+                self.push_move(ctx, [pos[0] - 1., pos[1] - 2.], true, &mut v);
             }
             _ => (),
         };
