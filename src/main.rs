@@ -23,6 +23,7 @@ const SQUARE_SIZE: [f32; 2] = [
 ];
 
 /// The two different colors a chess piece can be.
+#[derive(PartialEq)]
 enum Color {
     Black,
     White,
@@ -78,7 +79,8 @@ impl State {
                 [Piece::White(Type::Pawn); BOARD_SIZE],
                 [Piece::Empty; BOARD_SIZE],
                 [Piece::Empty; BOARD_SIZE],
-                [Piece::Empty; BOARD_SIZE],
+                // [Piece::Empty; BOARD_SIZE],
+                [Piece::Empty, Piece::Black(Type::Pawn), Piece::White(Type::Pawn), Piece::Empty, Piece::Empty, Piece::Empty, Piece::Empty, Piece::Empty,],
                 [Piece::Empty; BOARD_SIZE],
                 [Piece::Black(Type::Pawn); BOARD_SIZE],
                 [
@@ -274,11 +276,56 @@ impl State {
         let mut v: Vec<[f32; 2]> = vec![];
         match self.board[pos[1] as usize][pos[0] as usize] {
             Piece::Black(Type::Pawn) => {
-                v.push([pos[0], pos[1] - 1.]);
+                let mut new_pos: [f32; 2] = [pos[0], pos[1] - 1.];
+                if self.can_move_to(ctx, new_pos, false){
+                    v.push(new_pos);
+                }
+                if pos[1] == 6. {
+                    new_pos = [pos[0], pos[1] - 2.];
+                    if self.can_move_to(ctx, new_pos, false){
+                        v.push(new_pos);
+                    }
+                }
+            }
+            Piece::White(Type::Pawn) => {
+                let mut new_pos: [f32; 2] = [pos[0], pos[1] + 1.];
+                if self.can_move_to(ctx, new_pos, false){
+                    v.push(new_pos);
+                }
+                if pos[1] == 1. {
+                    new_pos = [pos[0], pos[1] + 2.];
+                    if self.can_move_to(ctx, new_pos, false){
+                        v.push(new_pos);
+                    }
+                }
             }
             _ => (),
         };
         v
+    }
+
+    fn can_move_to(&mut self, ctx: &mut Context, pos: [f32; 2], can_kill: bool) -> bool {
+        if pos[0] < 0. || pos[0] >= BOARD_SIZE as f32 || pos[1] < 0. || pos[1] >= BOARD_SIZE as f32 {
+            return false;
+        }
+        let piece =  self.board[pos[1] as usize][pos[0] as usize];
+        match piece {
+            Piece::Empty => true,
+            Piece::Black(_) => {
+                if self.color == Color::Black{
+                    false
+                } else {
+                    can_kill
+                }
+            }
+            Piece::White(_) => {
+                if self.color == Color::White{
+                    false
+                } else {
+                    can_kill
+                }
+            }
+        }
     }
 }
 
