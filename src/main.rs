@@ -294,10 +294,18 @@ impl State {
                         Piece::White(_) => v.push(new_pos),
                         _ => (),
                     }
+                    match self.board[new_pos[1] as usize][new_pos[0] as usize + 1] {
+                        Piece::White(_) => v.push(new_pos),
+                        _ => (),
+                    }
                 }
                 new_pos = [pos[0] - 1., pos[1] - 1.];
                 if !self.point_out_of_bounds(new_pos) {
                     match self.board[new_pos[1] as usize][new_pos[0] as usize] {
+                        Piece::White(_) => v.push(new_pos),
+                        _ => (),
+                    }
+                    match self.board[new_pos[1] as usize][new_pos[0] as usize + 1] {
                         Piece::White(_) => v.push(new_pos),
                         _ => (),
                     }
@@ -451,6 +459,27 @@ impl State {
                     }
                     offset -= 1.;
                 }
+            }
+            Piece::Black(Type::King) | Piece::White(Type::King) => {
+                let mut new_pos = [pos[0] + 1., pos[1]];
+                self.push_move(new_pos, true, &mut v);
+                new_pos = [pos[0] + 1., pos[1] + 1.];
+                self.push_move(new_pos, true, &mut v);
+                new_pos = [pos[0], pos[1] + 1.];
+                self.push_move(new_pos, true, &mut v);
+                new_pos = [pos[0] - 1., pos[1] + 1.];
+                self.push_move(new_pos, true, &mut v);
+                new_pos = [pos[0] - 1., pos[1]];
+                self.push_move(new_pos, true, &mut v);
+                new_pos = [pos[0] - 1., pos[1] - 1.];
+                self.push_move(new_pos, true, &mut v);
+                new_pos = [pos[0], pos[1] - 1.];
+                self.push_move(new_pos, true, &mut v);
+                new_pos = [pos[0] + 1., pos[1] - 1.];
+                self.push_move(new_pos, true, &mut v);
+                // if self.can_move_to(new_pos, true) {
+                //     v.push(new_pos)
+                // }
             }
             _ => (),
         };
