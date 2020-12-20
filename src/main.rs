@@ -457,6 +457,7 @@ impl State {
         v
     }
 
+    /// true if a point is outside of the chess board
     fn point_out_of_bounds(&mut self, pos: [f32; 2]) -> bool {
         pos[0] < 0. || pos[0] >= BOARD_SIZE as f32 || pos[1] < 0. || pos[1] >= BOARD_SIZE as f32
     }
@@ -495,6 +496,7 @@ impl State {
         false
     }
 
+    /// move the piece in the position self.selected_pos to the argument pos
     fn move_selected_piece(&mut self, pos: [f32; 2]) -> bool {
         let s_pos = self.selected_pos.unwrap();
         let moves = self.get_valid_moves(self.selected_pos.unwrap());
@@ -507,6 +509,7 @@ impl State {
         false
     }
 
+    /// checks if the piece being clicked on is of the right team
     fn is_piece_selectable(&mut self, pos: [f32; 2]) -> bool {
         match self.board[pos[1] as usize][pos[0] as usize] {
             Piece::Black(_) => self.color == Color::Black,
@@ -523,6 +526,7 @@ impl event::EventHandler for State {
         Ok(())
     }
 
+    /// when a mouse button is clicked down
     fn mouse_button_down_event(
         &mut self,
         ctx: &mut Context,
