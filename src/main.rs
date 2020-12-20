@@ -284,13 +284,19 @@ impl State {
                 if pos[1] == 6. { // starting line
                     self.push_move(ctx, [pos[0], pos[1] - 2.], false, &mut v);
                 }
-                match self.board[pos[1] as usize - 1][pos[0] as usize + 1] {
-                    Piece::White(_) => v.push([pos[0] + 1., pos[1] - 1.]),
-                    _ => (),
+                let mut new_pos = [pos[0] + 1., pos[1] - 1.];
+                if !self.point_out_of_bounds(new_pos) {
+                    match self.board[new_pos[1] as usize ][new_pos[0] as usize] {
+                        Piece::White(_) => v.push(new_pos),
+                        _ => (),
+                    }
                 }
-                match self.board[pos[1] as usize - 1][pos[0] as usize - 1] {
-                    Piece::White(_) => v.push([pos[0] - 1., pos[1] - 1.]),
-                    _ => (),
+                new_pos = [pos[0] - 1., pos[1] - 1.];
+                if !self.point_out_of_bounds(new_pos) {
+                    match self.board[new_pos[1] as usize ][new_pos[0] as usize] {
+                        Piece::White(_) => v.push(new_pos),
+                        _ => (),
+                    }
                 }
             }
             Piece::White(Type::Pawn) => {
@@ -298,13 +304,19 @@ impl State {
                 if pos[1] == 1. { // starting line
                     self.push_move(ctx, [pos[0], pos[1] + 2.], false, &mut v);
                 }
-                match self.board[pos[1] as usize + 1][pos[0] as usize + 1] {
-                    Piece::Black(_) => v.push([pos[0] + 1., pos[1] + 1.]),
-                    _ => (),
+                let mut new_pos = [pos[0] + 1., pos[1] + 1.];
+                if !self.point_out_of_bounds(new_pos) {
+                    match self.board[new_pos[1] as usize ][new_pos[0] as usize] {
+                        Piece::Black(_) => v.push(new_pos),
+                        _ => (),
+                    }
                 }
-                match self.board[pos[1] as usize + 1][pos[0] as usize - 1] {
-                    Piece::Black(_) => v.push([pos[0] - 1., pos[1] + 1.]),
-                    _ => (),
+                new_pos = [pos[0] + 1., pos[1] - 1.];
+                if !self.point_out_of_bounds(new_pos) {
+                    match self.board[new_pos[1] as usize ][new_pos[0] as usize] {
+                        Piece::Black(_) => v.push(new_pos),
+                        _ => (),
+                    }
                 }
             }
             Piece::Black(Type::Knight) | Piece::White(Type::Knight) => {
@@ -440,9 +452,13 @@ impl State {
         v
     }
 
+    fn point_out_of_bounds(&mut self, pos: [f32; 2]) -> bool {
+        pos[0] < 0. || pos[0] >= BOARD_SIZE as f32 || pos[1] < 0. || pos[1] >= BOARD_SIZE as f32
+    }
+
     /// checks if a space is available to be inhabited
     fn can_move_to(&mut self, ctx: &mut Context, pos: [f32; 2], can_kill: bool) -> bool {
-        if pos[0] < 0. || pos[0] >= BOARD_SIZE as f32 || pos[1] < 0. || pos[1] >= BOARD_SIZE as f32 {
+        if self.point_out_of_bounds(pos) {
             return false;
         }
         let piece =  self.board[pos[1] as usize][pos[0] as usize];
@@ -489,6 +505,7 @@ impl State {
         match self.board[pos[1] as usize][pos[0] as usize] {
             Piece::Black(_) => self.color == Color::Black,
             Piece::White(_) => self.color == Color::White,
+            Piece::Empty => false,
             _ => unreachable!(),
         }
     }
