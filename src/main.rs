@@ -277,13 +277,13 @@ impl State {
         match self.board[pos[1] as usize][pos[0] as usize] {
             Piece::Black(Type::Pawn) => {
                 self.push_move(ctx, [pos[0], pos[1] - 1.], false, &mut v);
-                if pos[1] == 6. {
+                if pos[1] == 6. { // starting line
                     self.push_move(ctx, [pos[0], pos[1] - 2.], false, &mut v);
                 }
             }
             Piece::White(Type::Pawn) => {
                 self.push_move(ctx, [pos[0], pos[1] + 1.], false, &mut v);
-                if pos[1] == 1. {
+                if pos[1] == 1. { // starting line
                     self.push_move(ctx, [pos[0], pos[1] + 2.], false, &mut v);
                 }
             }
