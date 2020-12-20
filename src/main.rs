@@ -276,6 +276,8 @@ impl State {
     /// lists the coordinates of valid moves
     fn get_valid_moves(&mut self, ctx: &mut Context, pos: [f32; 2]) -> Vec<[f32; 2]>{
         // TODO: Make piece logic more efficient and not stupid <20-12-20, Shane McDonough>
+        // TODO: Make pawns able to kill by sliding past <20-12-20, Shane McDonough>
+        // TODO: Create king logic <20-12-20, Shane McDonough>
         let mut v: Vec<[f32; 2]> = vec![];
         let piece = self.board[pos[1] as usize][pos[0] as usize];
         match piece {
