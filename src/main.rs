@@ -242,7 +242,7 @@ impl State {
     }
     
     /// highlights the square at the given position.
-    fn highlight_square(&mut self, ctx: &mut Context, pos: [f32; 2]) {
+    fn highlight_square(&mut self, ctx: &mut Context, pos: [f32; 2], color: graphics::Color) {
         let highlight = graphics::Mesh::new_rectangle(
             ctx,
             graphics::DrawMode::fill(),
@@ -252,7 +252,7 @@ impl State {
                 w: SQUARE_SIZE[0],
                 h: SQUARE_SIZE[1],
             },
-            [1.0, 1.0, 0.0, 0.3].into(),
+            color,
         )
         .unwrap();
         graphics::draw(
@@ -290,7 +290,7 @@ impl event::EventHandler for State {
         self.draw_board(ctx);
         self.draw_pieces(ctx);
         let current_square_pos = self.get_current_square(ctx);
-        self.highlight_square(ctx, current_square_pos);
+        self.highlight_square(ctx, current_square_pos, [1., 1., 0., 0.3].into());
         graphics::present(ctx)?;
         Ok(())
     }
