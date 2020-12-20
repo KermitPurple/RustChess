@@ -60,7 +60,7 @@ struct State {
     board: [[Piece; BOARD_SIZE]; BOARD_SIZE],
     /// color represents which team currently has a turn.
     color: Color,
-    /// the position of the currently selected peice
+    /// the position of the currently selected piece
     selected_pos: Option<[f32; 2]>,
 }
 
@@ -471,7 +471,7 @@ impl State {
         false
     }
 
-    fn move_selected_peice(&mut self, ctx: &mut Context, pos: [f32; 2]) {
+    fn move_selected_piece(&mut self, ctx: &mut Context, pos: [f32; 2]) {
         let s_pos = self.selected_pos.unwrap();
         let moves = self.get_valid_moves(ctx, self.selected_pos.unwrap());
         if moves.contains(&pos) {
@@ -493,7 +493,7 @@ impl event::EventHandler for State {
             if self.selected_pos == None {
                 self.selected_pos = Some(pos);
             } else {
-                self.move_selected_peice(ctx, pos);
+                self.move_selected_piece(ctx, pos);
                 self.selected_pos = None;
             }
         }
