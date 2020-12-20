@@ -276,27 +276,15 @@ impl State {
         let mut v: Vec<[f32; 2]> = vec![];
         match self.board[pos[1] as usize][pos[0] as usize] {
             Piece::Black(Type::Pawn) => {
-                let mut new_pos: [f32; 2] = [pos[0], pos[1] - 1.];
-                if self.can_move_to(ctx, new_pos, false){
-                    v.push(new_pos);
-                }
+                self.push_move(ctx, [pos[0], pos[1] - 1.], false, &mut v);
                 if pos[1] == 6. {
-                    new_pos = [pos[0], pos[1] - 2.];
-                    if self.can_move_to(ctx, new_pos, false){
-                        v.push(new_pos);
-                    }
+                    self.push_move(ctx, [pos[0], pos[1] - 2.], false, &mut v);
                 }
             }
             Piece::White(Type::Pawn) => {
-                let mut new_pos: [f32; 2] = [pos[0], pos[1] + 1.];
-                if self.can_move_to(ctx, new_pos, false){
-                    v.push(new_pos);
-                }
+                self.push_move(ctx, [pos[0], pos[1] + 1.], false, &mut v);
                 if pos[1] == 1. {
-                    new_pos = [pos[0], pos[1] + 2.];
-                    if self.can_move_to(ctx, new_pos, false){
-                        v.push(new_pos);
-                    }
+                    self.push_move(ctx, [pos[0], pos[1] + 2.], false, &mut v);
                 }
             }
             _ => (),
@@ -325,6 +313,12 @@ impl State {
                     can_kill
                 }
             }
+        }
+    }
+
+    fn push_move(&mut self, ctx: &mut Context, new_pos: [f32; 2], can_kill: bool, v: &mut Vec<[f32; 2]>){
+        if self.can_move_to(ctx, new_pos, can_kill){
+            v.push(new_pos);
         }
     }
 }
