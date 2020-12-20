@@ -373,6 +373,64 @@ impl State {
                     offset += 1.;
                 }
             }
+            Piece::Black(Type::Queen) | Piece::White(Type::Queen) => {
+                let mut offset = 1.;
+                while self.push_move(ctx, [pos[0] + offset, pos[1] + offset], true, &mut v){
+                    if !self.can_move_to(ctx, [pos[0] + offset, pos[1] + offset], false) {
+                        break;
+                    }
+                    offset += 1.;
+                }
+                offset = 1.;
+                while self.push_move(ctx, [pos[0] - offset, pos[1] + offset], true, &mut v){
+                    if !self.can_move_to(ctx, [pos[0] - offset, pos[1] + offset], false) {
+                        break;
+                    }
+                    offset += 1.;
+                }
+                offset = 1.;
+                while self.push_move(ctx, [pos[0] + offset, pos[1] - offset], true, &mut v){
+                    if !self.can_move_to(ctx, [pos[0] + offset, pos[1] - offset], false) {
+                        break;
+                    }
+                    offset += 1.;
+                }
+                offset = 1.;
+                while self.push_move(ctx, [pos[0] - offset, pos[1] - offset], true, &mut v){
+                    if !self.can_move_to(ctx, [pos[0] - offset, pos[1] - offset], false) {
+                        break;
+                    }
+                    offset += 1.;
+                }
+                offset = 1.;
+                while self.push_move(ctx, [pos[0] + offset, pos[1]], true, &mut v){
+                    if !self.can_move_to(ctx, [pos[0] + offset, pos[1]], false) {
+                        break;
+                    }
+                    offset += 1.;
+                }
+                offset = -1.;
+                while self.push_move(ctx, [pos[0] + offset, pos[1]], true, &mut v){
+                    if !self.can_move_to(ctx, [pos[0] + offset, pos[1]], false) {
+                        break;
+                    }
+                    offset -= 1.;
+                }
+                offset = 1.;
+                while self.push_move(ctx, [pos[0], pos[1] + offset], true, &mut v){
+                    if !self.can_move_to(ctx, [pos[0], pos[1] + offset], false) {
+                        break;
+                    }
+                    offset += 1.;
+                }
+                offset = -1.;
+                while self.push_move(ctx, [pos[0], pos[1] + offset], true, &mut v){
+                    if !self.can_move_to(ctx, [pos[0], pos[1] + offset], false) {
+                        break;
+                    }
+                    offset -= 1.;
+                }
+            }
             _ => (),
         };
         v
