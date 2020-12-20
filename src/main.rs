@@ -470,6 +470,15 @@ impl State {
         }
         false
     }
+
+    fn move_selected_peice(&mut self, ctx: &mut Context, pos: [f32; 2]) {
+        let s_pos = self.selected_pos.unwrap();
+        let moves = self.get_valid_moves(ctx, self.selected_pos.unwrap());
+        if moves.contains(&pos) {
+            self.board[pos[1] as usize][pos[0] as usize] = self.board[s_pos[1] as usize][s_pos[0] as usize];
+            self.board[s_pos[1] as usize][s_pos[0] as usize] = Piece::Empty;
+        }
+    }
 }
 
 impl event::EventHandler for State {
@@ -480,7 +489,13 @@ impl event::EventHandler for State {
 
     fn mouse_button_down_event(&mut self, ctx: &mut Context, button: input::mouse::MouseButton, _x: f32, _y: f32){
         if button == input::mouse::MouseButton::Left {
-            self.selected_pos = Some(self.get_current_square(ctx));
+            let pos = self.get_current_square(ctx);
+            if self.selected_pos == None {
+                self.selected_pos = Some(pos);
+            } else {
+                self.move_selected_peice(ctx, pos);
+                self.selected_pos = None;
+            }
         }
     }
 
