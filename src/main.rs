@@ -283,15 +283,6 @@ impl State {
         let mut v: Vec<[f32; 2]> = vec![];
         let piece = self.board[pos[1] as usize][pos[0] as usize];
         match piece {
-            Piece::Black(_) => if self.color == Color::White {
-                return v;
-                }
-            Piece::White(_) => if self.color == Color::Black {
-                return v;
-                }
-            _ => (),
-        };
-        match piece {
             Piece::Black(Type::Pawn) => {
                 self.push_move(ctx, [pos[0], pos[1] - 1.], false, &mut v);
                 if pos[1] == 6. { // starting line
@@ -471,12 +462,22 @@ impl State {
         false
     }
 
-    fn move_selected_piece(&mut self, ctx: &mut Context, pos: [f32; 2]) {
+    fn move_selected_piece(&mut self, ctx: &mut Context, pos: [f32; 2]) -> bool{
         let s_pos = self.selected_pos.unwrap();
         let moves = self.get_valid_moves(ctx, self.selected_pos.unwrap());
         if moves.contains(&pos) {
             self.board[pos[1] as usize][pos[0] as usize] = self.board[s_pos[1] as usize][s_pos[0] as usize];
             self.board[s_pos[1] as usize][s_pos[0] as usize] = Piece::Empty;
+            return true;
+        }
+        false
+    }
+
+    fn is_piece_selectable(&mut self, ctx: &mut Context, pos: [f32; 2]) -> bool {
+        match self.board[pos[1] as usize][pos[0] as usize] {
+            Piece::Black(_) => self.color == Color::Black,
+            Piece::White(_) => self.color == Color::White,
+            _ => unreachable!(),
         }
     }
 }
@@ -491,9 +492,18 @@ impl event::EventHandler for State {
         if button == input::mouse::MouseButton::Left {
             let pos = self.get_current_square(ctx);
             if self.selected_pos == None {
+                if !self.is_piece_selectable(ctx, pos) {
+                    return
+                }
                 self.selected_pos = Some(pos);
             } else {
-                self.move_selected_piece(ctx, pos);
+                if self.move_selected_piece(ctx, pos) {
+                    self.color = match self.color {
+                        Color::Black => Color::White,
+                        Color::White => Color::Black,
+                        _ => unreachable!(),
+                    };
+                }
                 self.selected_pos = None;
             }
         }
