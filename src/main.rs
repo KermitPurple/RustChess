@@ -79,14 +79,16 @@ impl State {
                     Piece::White(Type::Knight),
                     Piece::White(Type::Rook),
                 ],
-                [Piece::White(Type::Pawn); BOARD_SIZE],
+                // [Piece::White(Type::Pawn); BOARD_SIZE],
+                [Piece::Empty; BOARD_SIZE],
                 [Piece::Empty; BOARD_SIZE],
                 // [Piece::Empty; BOARD_SIZE],
                 // [Piece::Empty; BOARD_SIZE],
-                [Piece::Empty, Piece::Black(Type::Knight), Piece::White(Type::Pawn), Piece::Empty, Piece::Empty, Piece::Empty, Piece::Empty, Piece::Empty,],
+                [Piece::Empty, Piece::Empty, Piece::White(Type::Pawn), Piece::Empty, Piece::Black(Type::Rook), Piece::Empty, Piece::Empty, Piece::Empty,],
                 [Piece::Empty, Piece::Black(Type::Knight), Piece::White(Type::Pawn), Piece::Empty, Piece::Empty, Piece::Empty, Piece::Empty, Piece::Empty,],
                 [Piece::Empty; BOARD_SIZE],
-                [Piece::Black(Type::Pawn); BOARD_SIZE],
+                [Piece::Empty; BOARD_SIZE],
+                // [Piece::Black(Type::Pawn); BOARD_SIZE],
                 [
                     Piece::Black(Type::Rook),
                     Piece::Black(Type::Knight),
@@ -314,19 +316,61 @@ impl State {
             Piece::Black(Type::Rook) | Piece::White(Type::Rook) => {
                 let mut offset = 1.;
                 while self.push_move(ctx, [pos[0] + offset, pos[1]], true, &mut v){
+                    if !self.can_move_to(ctx, [pos[0] + offset, pos[1]], false) {
+                        break;
+                    }
                     offset += 1.;
                 }
                 offset = -1.;
                 while self.push_move(ctx, [pos[0] + offset, pos[1]], true, &mut v){
+                    if !self.can_move_to(ctx, [pos[0] + offset, pos[1]], false) {
+                        break;
+                    }
                     offset -= 1.;
                 }
                 offset = 1.;
                 while self.push_move(ctx, [pos[0], pos[1] + offset], true, &mut v){
+                    if !self.can_move_to(ctx, [pos[0], pos[1] + offset], false) {
+                        break;
+                    }
                     offset += 1.;
                 }
                 offset = -1.;
                 while self.push_move(ctx, [pos[0], pos[1] + offset], true, &mut v){
+                    if !self.can_move_to(ctx, [pos[0], pos[1] + offset], false) {
+                        break;
+                    }
                     offset -= 1.;
+                }
+            }
+            Piece::Black(Type::Bishop) | Piece::White(Type::Bishop) => {
+                let mut offset = 1.;
+                while self.push_move(ctx, [pos[0] + offset, pos[1] + offset], true, &mut v){
+                    if !self.can_move_to(ctx, [pos[0] + offset, pos[1] + offset], false) {
+                        break;
+                    }
+                    offset += 1.;
+                }
+                offset = 1.;
+                while self.push_move(ctx, [pos[0] - offset, pos[1] + offset], true, &mut v){
+                    if !self.can_move_to(ctx, [pos[0] - offset, pos[1] + offset], false) {
+                        break;
+                    }
+                    offset += 1.;
+                }
+                offset = 1.;
+                while self.push_move(ctx, [pos[0] + offset, pos[1] - offset], true, &mut v){
+                    if !self.can_move_to(ctx, [pos[0] + offset, pos[1] - offset], false) {
+                        break;
+                    }
+                    offset += 1.;
+                }
+                offset = 1.;
+                while self.push_move(ctx, [pos[0] - offset, pos[1] - offset], true, &mut v){
+                    if !self.can_move_to(ctx, [pos[0] - offset, pos[1] - offset], false) {
+                        break;
+                    }
+                    offset += 1.;
                 }
             }
             _ => (),
