@@ -311,7 +311,7 @@ impl State {
                         _ => (),
                     }
                 }
-                new_pos = [pos[0] + 1., pos[1] - 1.];
+                new_pos = [pos[0] - 1., pos[1] + 1.];
                 if !self.point_out_of_bounds(new_pos) {
                     match self.board[new_pos[1] as usize ][new_pos[0] as usize] {
                         Piece::Black(_) => v.push(new_pos),
