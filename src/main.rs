@@ -56,6 +56,8 @@ struct State {
     board: [[Piece; BOARD_SIZE]; BOARD_SIZE],
     /// color represents which team currently has a turn.
     color: Color,
+    /// the position of the currently selected peice
+    selected_pos: Option<[f32; 2]>,
 }
 
 impl State {
@@ -91,6 +93,7 @@ impl State {
                 ],
             ],
             color: Color::Black,
+            selected_pos: None,
         }
     }
 
@@ -285,12 +288,25 @@ impl event::EventHandler for State {
         Ok(())
     }
 
+    fn mouse_button_down_event(&mut self, ctx: &mut Context, button: input::mouse::MouseButton, _x: f32, _y: f32){
+        if button == input::mouse::MouseButton::Left {
+            self.selected_pos = Some(self.get_current_square(ctx));
+        }
+    }
+
     /// the function that draws everything to the screen.
     fn draw(&mut self, ctx: &mut Context) -> GameResult {
         self.draw_board(ctx);
         self.draw_pieces(ctx);
         let current_square_pos = self.get_current_square(ctx);
         self.highlight_square(ctx, current_square_pos, [1., 1., 0., 0.3].into());
+        if self.selected_pos != None {
+            self.highlight_square(ctx, self.selected_pos.unwrap(), [1., 0., 0., 0.3].into());
+            let moves = self.get_valid_moves(ctx, self.selected_pos.unwrap());
+            for m in moves {
+                self.highlight_square(ctx, m, [0., 1., 0., 0.3].into());
+            }
+        }
         graphics::present(ctx)?;
         Ok(())
     }
