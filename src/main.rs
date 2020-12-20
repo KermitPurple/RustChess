@@ -265,6 +265,18 @@ impl State {
         )
         .unwrap();
     }
+
+    /// lists the coordinates of valid moves
+    fn get_valid_moves(&mut self, ctx: &mut Context, pos: [f32; 2]) -> Vec<[f32; 2]>{
+        let mut v: Vec<[f32; 2]> = vec![];
+        match self.board[pos[1] as usize][pos[0] as usize] {
+            Piece::Black(Type::Pawn) => {
+                v.push([pos[0], pos[1] - 1.]);
+            }
+            _ => (),
+        };
+        v
+    }
 }
 
 impl event::EventHandler for State {
