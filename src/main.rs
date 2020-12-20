@@ -331,10 +331,12 @@ impl State {
     }
 
     /// Checks if a new point can be moved to then pushed to a vector
-    fn push_move(&mut self, ctx: &mut Context, new_pos: [f32; 2], can_kill: bool, v: &mut Vec<[f32; 2]>){
+    fn push_move(&mut self, ctx: &mut Context, new_pos: [f32; 2], can_kill: bool, v: &mut Vec<[f32; 2]>) -> bool{
         if self.can_move_to(ctx, new_pos, can_kill){
             v.push(new_pos);
+            return true;
         }
+        false
     }
 }
 
