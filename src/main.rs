@@ -292,6 +292,7 @@ impl State {
         v
     }
 
+    /// checks if a space is available to be inhabited
     fn can_move_to(&mut self, ctx: &mut Context, pos: [f32; 2], can_kill: bool) -> bool {
         if pos[0] < 0. || pos[0] >= BOARD_SIZE as f32 || pos[1] < 0. || pos[1] >= BOARD_SIZE as f32 {
             return false;
@@ -316,6 +317,7 @@ impl State {
         }
     }
 
+    /// Checks if a new point can be moved to then pushed to a vector
     fn push_move(&mut self, ctx: &mut Context, new_pos: [f32; 2], can_kill: bool, v: &mut Vec<[f32; 2]>){
         if self.can_move_to(ctx, new_pos, can_kill){
             v.push(new_pos);
