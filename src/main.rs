@@ -461,6 +461,7 @@ impl State {
                 }
             }
             Piece::Black(Type::King) | Piece::White(Type::King) => {
+                // TODO: Add logic stoping from king from making illegal moves <20-12-20, Shane McDonough>
                 let mut new_pos = [pos[0] + 1., pos[1]];
                 self.push_move(new_pos, true, &mut v);
                 new_pos = [pos[0] + 1., pos[1] + 1.];
@@ -477,9 +478,6 @@ impl State {
                 self.push_move(new_pos, true, &mut v);
                 new_pos = [pos[0] + 1., pos[1] - 1.];
                 self.push_move(new_pos, true, &mut v);
-                // if self.can_move_to(new_pos, true) {
-                //     v.push(new_pos)
-                // }
             }
             _ => (),
         };
