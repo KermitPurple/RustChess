@@ -1,3 +1,4 @@
+// TODO: More Docs <20-12-20, Shane McDonough> //
 //! This is a chess program.
 //! it uses the ggez graphics and game library to.
 //! create a graphics user interface and get mouse input.
